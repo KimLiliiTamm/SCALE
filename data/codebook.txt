@@ -1,0 +1,7 @@
+CODEBOOK: Masculinity Discourse Analysis
+
+Assign one numerical code (i.e., 1, 2, or 3) to each transcript chunk based on its primary rhetorical function.
+
+    1. Core Dogma (Belief/Worldview): The text primarily asserts a fundamental rule, philosophical truth, or definition about masculinity, society, or human nature.
+    2. Provocation (Attack/Polemic): The text primarily uses inflammatory language, attacks opposing viewpoints (e.g., "weak men," "toxic masculinity"), or deliberately challenges societal norms to elicit a reaction.
+    3. Rhetorical Evidence (Anecdote/Metaphor): The text primarily uses personal stories, clinical examples, biological claims, or metaphors to justify a previously established dogma.

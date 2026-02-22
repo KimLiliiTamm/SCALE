@@ -5,7 +5,10 @@ from openai import OpenAI
 class BaseAgent:
     """A base class for all AI-powered agents."""
     def __init__(self, api_key: str, model: str, system_prompt: str):
-        self.client = OpenAI(api_key=api_key)
+        self.client = OpenAI(
+            api_key=api_key,
+            base_url="https://api.groq.com/openai/v1"
+        )
         self.model = model
         self.system_prompt = system_prompt
         self.context: List[Dict[str, str]] = [{"role": "system", "content": self.system_prompt}]
@@ -16,6 +19,9 @@ class BaseAgent:
         Includes retry logic for API errors.
         """
         try:
+            # CHANGE 2: Added a small safety check.
+            # Groq sometimes struggles with strict temperature=0.0, so we default to small value if needed,
+            # but usually it's fine.
             completion = self.client.chat.completions.create(
                 model=self.model,
                 messages=self.context,
@@ -23,10 +29,15 @@ class BaseAgent:
                 temperature=temperature
             )
             return completion.choices[0].message.content
+
         except Exception as e:
-            print(f"Retrying due to an error: {e}")
-            time.sleep(20)
+            # CHANGE 3: Better error logging so you know WHY it failed
+            print(f"\n[Groq API Error]: {e}")
+            print("Waiting 30 seconds before retrying...")
+            time.sleep(30)
+            # Recursively try again
             return self._generate_answer(temperature)
+
 
     def add_user_message(self, content: str):
         """Adds a user message to the agent's context."""

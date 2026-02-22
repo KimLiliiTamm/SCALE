@@ -1,0 +1,9 @@
+.idea/
+
+# Python cache
+__pycache__/
+
+configs/config.json
+results/
+data/test_andrew_tate/
+data/test_esther_perel/
