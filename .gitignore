@@ -7,3 +7,5 @@ configs/config.json
 results/
 data/test_andrew_tate/
 data/test_esther_perel/
+data/batch_30/
+data/mixed_validation/
