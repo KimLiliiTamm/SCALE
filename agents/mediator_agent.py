@@ -3,8 +3,8 @@ from typing import List
 
 class MediatorAgent(BaseAgent):
     """An agent that mediates codebook update discussions."""
-    def __init__(self, api_key: str, model: str, prompt_template: str):
-        super().__init__(api_key, model, prompt_template)
+    def __init__(self, api_key: str, model: str, prompt_template: str, base_url: str = "https://api.groq.com/openai/v1"):
+        super().__init__(api_key, model, prompt_template, base_url)
 
     def mediate(self, proposals: List[str]) -> str:
         """Summarizes proposals and asks for agreement."""

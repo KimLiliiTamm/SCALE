@@ -3,8 +3,8 @@ from typing import List
 
 class JudgeAgent(BaseAgent):
     """An agent that judges whether other agents are in agreement."""
-    def __init__(self, api_key: str, model: str, prompt_template: str):
-        super().__init__(api_key, model, prompt_template)
+    def __init__(self, api_key: str, model: str, prompt_template: str, base_url: str = "https://api.groq.com/openai/v1"):
+        super().__init__(api_key, model, prompt_template, base_url)
 
     def check_agreement(self, agent_responses: List[str]) -> bool:
         """

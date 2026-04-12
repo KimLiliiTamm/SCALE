@@ -28,11 +28,12 @@ class ContentAnalysisSimulation:
         # Coder Simulation
         self.logger.log("********** Bot Annotation **********\n")
         self.api_key = config['api_key']
+        self.base_url = config.get('base_url', 'https://api.groq.com/openai/v1')
         self.codebook = load_codebook(config['dataset_name'], config['paths']['data_path'])
-        
+
         self.scientists = self._create_scientists()
-        self.judge = JudgeAgent(self.api_key, self.model, config['prompt']['judge'])
-        self.mediator = MediatorAgent(self.api_key, self.model, config['prompt']['mediator'])
+        self.judge = JudgeAgent(self.api_key, self.model, config['prompt']['judge'], base_url=self.base_url)
+        self.mediator = MediatorAgent(self.api_key, self.model, config['prompt']['mediator'], base_url=self.base_url)
         self.logger.log(f"Initialized {self.num_agents} Social Scientist Agents For {self.config['dataset_name']} Task.\n")
 
         # Intervention settings
@@ -56,6 +57,7 @@ class ContentAnalysisSimulation:
                 model=self.model,
                 persona=personas[i],
                 codebook=self.codebook,
+                base_url=self.base_url,
             )
             scientists.append(agent)
         return scientists

@@ -4,10 +4,10 @@ from openai import OpenAI
 
 class BaseAgent:
     """A base class for all AI-powered agents."""
-    def __init__(self, api_key: str, model: str, system_prompt: str):
+    def __init__(self, api_key: str, model: str, system_prompt: str, base_url: str = "https://api.groq.com/openai/v1"):
         self.client = OpenAI(
             api_key=api_key,
-            base_url="https://api.groq.com/openai/v1"
+            base_url=base_url
         )
         self.model = model
         self.system_prompt = system_prompt
@@ -32,7 +32,7 @@ class BaseAgent:
 
         except Exception as e:
             # CHANGE 3: Better error logging so you know WHY it failed
-            print(f"\n[Groq API Error]: {e}")
+            print(f"\n[LLM API Error]: {e}")
             print("Waiting 30 seconds before retrying...")
             time.sleep(30)
             # Recursively try again

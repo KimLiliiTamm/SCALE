@@ -3,12 +3,12 @@ from typing import List, Dict
 
 class SocialScientistAgent(BaseAgent):
     """Represents an LLM agent emulating a social scientist."""
-    def __init__(self, api_key: str, model: str, persona: str, codebook: str):
+    def __init__(self, api_key: str, model: str, persona: str, codebook: str, base_url: str = "https://api.groq.com/openai/v1"):
         self.persona = persona
         self.codebook = codebook
         # system_prompt = f"Persona:\n{persona}\n\nCODEBOOK:\n{codebook}\n\nINSTRUCTION:\n{instruction}"
         system_prompt = f"Persona:\n{persona}\n\nCODEBOOK:\n{codebook}"
-        super().__init__(api_key, model, system_prompt)
+        super().__init__(api_key, model, system_prompt, base_url)
 
     def code_text(self, text: str) -> str:
         """Codes a single piece of text based on the codebook and persona."""
