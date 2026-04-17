@@ -1,10 +1,11 @@
 import time
+import httpx
 from typing import List, Dict, Any
-from openai import OpenAI
+from openai import OpenAI, APIStatusError, APIConnectionError, RateLimitError
 
 class BaseAgent:
     """A base class for all AI-powered agents."""
-    def __init__(self, api_key: str, model: str, system_prompt: str, base_url: str = "https://api.groq.com/openai/v1"):
+    def __init__(self, api_key: str, model: str, system_prompt: str, base_url: str = "https://api.groq.com/openai/v1", max_retries: int = 3):
         self.client = OpenAI(
             api_key=api_key,
             base_url=base_url
@@ -12,31 +13,45 @@ class BaseAgent:
         self.model = model
         self.system_prompt = system_prompt
         self.context: List[Dict[str, str]] = [{"role": "system", "content": self.system_prompt}]
+        self.max_retries = max_retries
 
     def _generate_answer(self, temperature: float = 0.0) -> str:
         """
         Generates a response from the LLM based on the current context.
-        Includes retry logic for API errors.
+        Retries up to self.max_retries times on transient errors only.
+        Non-retryable errors (4xx) are raised immediately.
         """
-        try:
-            # CHANGE 2: Added a small safety check.
-            # Groq sometimes struggles with strict temperature=0.0, so we default to small value if needed,
-            # but usually it's fine.
-            completion = self.client.chat.completions.create(
-                model=self.model,
-                messages=self.context,
-                n=1,
-                temperature=temperature
-            )
-            return completion.choices[0].message.content
+        for attempt in range(self.max_retries + 1):
+            try:
+                completion = self.client.chat.completions.create(
+                    model=self.model,
+                    messages=self.context,
+                    n=1,
+                    temperature=temperature
+                )
+                return completion.choices[0].message.content
 
-        except Exception as e:
-            # CHANGE 3: Better error logging so you know WHY it failed
-            print(f"\n[LLM API Error]: {e}")
-            print("Waiting 30 seconds before retrying...")
-            time.sleep(30)
-            # Recursively try again
-            return self._generate_answer(temperature)
+            except (RateLimitError, APIConnectionError, httpx.ConnectError) as e:
+                print(f"\n[Transient LLM Error, attempt {attempt + 1}/{self.max_retries + 1}]: {e}")
+                if attempt < self.max_retries:
+                    print("Waiting 30 seconds before retrying...")
+                    time.sleep(30)
+                else:
+                    print("Max retries exhausted.")
+                    raise
+
+            except APIStatusError as e:
+                if e.status_code >= 500:
+                    print(f"\n[Server Error {e.status_code}, attempt {attempt + 1}/{self.max_retries + 1}]: {e}")
+                    if attempt < self.max_retries:
+                        print("Waiting 30 seconds before retrying...")
+                        time.sleep(30)
+                    else:
+                        print("Max retries exhausted.")
+                        raise
+                else:
+                    print(f"\n[Non-retryable LLM Error {e.status_code}]: {e}")
+                    raise
 
 
     def add_user_message(self, content: str):
