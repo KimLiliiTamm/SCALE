@@ -91,8 +91,10 @@ class ContentAnalysisSimulation:
             # Agent Discussion
             discussion_results, final_answers, final_agreements = self._run_discussion_phase(chunk, coding_results, coding_agreements)
             
-            # Codebook Evolution
-            self._run_codebook_evolution_phase()
+            # Codebook Evolution (disabled — annotation-only run)
+            # self._run_codebook_evolution_phase()
+            for agent in self.scientists:
+                agent.reset_context()
             
             # Log results for this chunk
             chunk_log = {
