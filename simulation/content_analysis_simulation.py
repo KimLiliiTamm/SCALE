@@ -8,6 +8,7 @@ from agents.mediator_agent import MediatorAgent
 from agents.human_expert import HumanExpert
 from utils.logger import Logger
 from utils.config_loader import load_codebook
+from concurrent.futures import ThreadPoolExecutor
 
 class ContentAnalysisSimulation:
     def __init__(self, config: Dict[str, Any], logger: Logger):
@@ -123,7 +124,8 @@ class ContentAnalysisSimulation:
             text_id = f"Text-{chunk.index[i]+1}"
             self.logger.log(f"--- Coding {text_id} ---\n{text}\n")
             
-            responses = [agent.code_text(text) for agent in self.scientists]
+            with ThreadPoolExecutor(max_workers=self.num_agents) as executor:
+                responses = list(executor.map(lambda agent: agent.code_text(text), self.scientists))
             for j, response in enumerate(responses):
                 self.logger.log(f"Agent {j+1}: {response}\n")
 
@@ -155,8 +157,12 @@ class ContentAnalysisSimulation:
                     self.logger.log(f"<Discussion Round {round_num + 1}>\n")
                     current_answers = discussion_history[-1]
 
-                    next_round_answers = [agent.discuss(text, current_answers[j], current_answers[:j] + current_answers[j+1:])
-                                          for j, agent in enumerate(self.scientists)]
+                    def _discuss_agent(args):
+                        j, agent = args
+                        return agent.discuss(text, current_answers[j], current_answers[:j] + current_answers[j+1:])
+
+                    with ThreadPoolExecutor(max_workers=self.num_agents) as executor:
+                        next_round_answers = list(executor.map(_discuss_agent, enumerate(self.scientists)))
                     for j, answer in enumerate(next_round_answers):
                         self.logger.log(f"Agent {j+1}: {answer}\n")
                     
