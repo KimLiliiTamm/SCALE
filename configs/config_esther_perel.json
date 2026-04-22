@@ -1,7 +1,7 @@
 {
   "api_key": "EMPTY",
   "base_url": "http://localhost:8000/v1",
-  "dataset_name": "hpc_run/esther_perel/data.xlsx",
+  "dataset_name": "hpc_run/esther_perel",
   "paths": {
     "data_path": "./data",
     "config_path": "./configs",
