@@ -1,0 +1,40 @@
+{
+  "api_key": "EMPTY",
+  "base_url": "http://localhost:8000/v1",
+  "dataset_name": "hpc_run/john_gottman",
+  "paths": {
+    "data_path": "./data",
+    "config_path": "./configs",
+    "result_path": "./results"
+  },
+  "settings": {
+    "agents": 3,
+    "rounds": 2,
+    "chunk_size": 5,
+    "seed": 42,
+    "model": "meta-llama/Llama-3.3-70B-Instruct",
+    "intervention": {
+      "enabled": false,
+      "scope": "extensive",
+      "authority": "directive"
+    }
+  },
+  "persona": {
+    "Sterling": "You are Dr. Sterling, a 55-year-old Political Sociologist analyzing modern ideological movements. Your expertise lies in identifying core dogmas, power dynamics, and structural worldviews. You approach texts objectively, looking for fundamental belief statements regarding hierarchy, society, and human nature. You do not judge the morality of the text; you strictly identify its underlying ideological framework.",
+    "Hayes": "You are Dr. Hayes, a 42-year-old researcher in Gender Studies and Clinical Psychology. You analyze how gender roles, emotional norms, and societal expectations are constructed. You look for statements that define what it means to be a 'real man,' attitudes toward emotional vulnerability, and relational dynamics. You maintain a strictly academic and analytical tone.",
+    "Vance": "You are Dr. Vance, a 38-year-old expert in Rhetoric and Persuasion. You analyze texts to identify debate tactics, framing, and provocative statements. You look for inflammatory language, polemics, metaphors, and how the speaker attacks opposing viewpoints or asserts dominance over the audience. You focus strictly on *how* the argument is constructed and weaponized."
+  },
+  "prompt": {
+    "coding": "You are now coding text entries independently following the instructions:\n1. Process each TEXT using the guidelines in the CODEBOOK. The CODEBOOK requires THREE annotations per text: (A) PRIMARY rhetorical function [1, 2, or 3], (B) SECONDARY rhetorical function [1, 2, 3, or 0 if none], and (C) QUOTABILITY [Q or NQ].\n2. Base decisions solely on the CODEBOOK and PERSONA.\n3. Act as a social scientist, providing a well-reasoned explanation for each of the three annotations. In your explanation, quote the exact sentence from the text that justifies your coding.\n4. At the end of your response, state your final answers in this exact format, each on its own line:\nPRIMARY: <1|2|3>\nSECONDARY: <1|2|3|0>\nQUOTABILITY: <Q|NQ>",
+    "discussion": "For some TEXTs, other social scientists have provided different coding results and reasons. You are now conducting a discussion. Below are the responses from other social scientists. Use these responses carefully as additional guidance. You may accept or reject their opinions when updating your three annotations (PRIMARY, SECONDARY, QUOTABILITY). Keep your response under 200 words. State only your updated position and the single strongest reason for any change. At the end of your response, state your final answers in this exact format, each on its own line:\nPRIMARY: <1|2|3>\nSECONDARY: <1|2|3|0>\nQUOTABILITY: <Q|NQ>"  ,
+    "update": "Based on the coding and discussion results, you are now updating the CODEBOOK. You may revise the CODEBOOK or keep it unchanged. Do not change the CODEBOOK if it adequately fits the current examples. If you make changes, output the UPDATED CODEBOOK; otherwise, output the ORIGINAL CODEBOOK.\n\nCriteria for a good CODEBOOK:\n1. The CODEBOOK should cover all cases and patterns in the examples.\n2. Each rule should be unique, with minimal overlap.\n\nGuidelines for changes:\n1. You may add examples or clarifications to the categories.\n2. Do not change the existing fundamental categories.",
+    "judge": "You are a judge. Several social scientists are working on a content analysis task. Compare their responses and determine if they agree. During CODING or DISCUSSION: each scientist provides annotations in the format 'PRIMARY: X', 'SECONDARY: Y', 'QUOTABILITY: Z'. Respond 'same' ONLY if all three annotations match exactly across all scientists. During CODEBOOK REVIEW: each scientist states whether they accept or reject a proposed codebook. Respond 'same' if all scientists take the same position (all accept OR all reject). Respond 'different' if any scientist's position differs from the others. Only include the single word 'same' or 'different' in your response.",
+    "mediator": "You are a mediator. The social scientists have proposed updates to the CODEBOOK. Synthesize their proposals into a single unified CODEBOOK. You MUST preserve the fundamental structure: THREE annotations per text (PRIMARY [1,2,3], SECONDARY [1,2,3,0], QUOTABILITY [Q,NQ]) using the three rhetorical function categories (1=Core Dogma, 2=Provocation, 3=Rhetorical Evidence). You may ONLY add clarifying examples or refine descriptions within existing categories. Do NOT add, remove, rename, or replace any categories. Do NOT change the SECONDARY codes from 1,2,3,0 to anything else. Output only the content of the CODEBOOK.",
+    "collaborative": "Another social scientist has provided advice on your response. Consider this advice carefully. You may accept or reject it when updating your answer.",
+    "directive": "A human social scientist expert has issued instructions regarding your response. You MUST follow these instructions when updating your answer."
+  },
+  "codebook_example": {
+    "original": "CODEBOOK: Masculinity Discourse Analysis\n\nFor each transcript chunk, provide THREE annotations:\n\nA) PRIMARY RHETORICAL FUNCTION [Choose one: 1, 2, or 3]\nB) SECONDARY RHETORICAL FUNCTION [Choose one: 1, 2, 3, or 0 if none]\nC) QUOTABILITY [Choose: Q or NQ]\n\n1. Core Dogma: The text states a fundamental belief about men or society.\n2. Provocation: The text attacks an opposing view or uses inflammatory language.\n3. Rhetorical Evidence: The text uses stories, biology, or metaphors as proof.\n\nQUOTABILITY: Q if the text contains a memorable, self-contained phrase effective as a direct quote; NQ otherwise.",
+    "updated": "CODEBOOK: Masculinity Discourse Analysis\n\nFor each transcript chunk, provide THREE annotations:\n\nA) PRIMARY RHETORICAL FUNCTION [Choose one: 1, 2, or 3]\nB) SECONDARY RHETORICAL FUNCTION [Choose one: 1, 2, 3, or 0 if none]\nC) QUOTABILITY [Choose: Q or NQ]\n\nRHETORICAL FUNCTION CATEGORIES:\n\n1. Core Dogma (Belief/Worldview): The text primarily asserts a fundamental rule, philosophical truth, or definition about masculinity, society, or human nature. This includes:\n\t- Declarations of how men 'should' behave or what constitutes a 'real man'.\n\t- Statements establishing hierarchy, stoicism, or duty.\n\t- Examples: 'A man's value is derived from his ability to protect and provide.', 'Meaning is found through taking on responsibility.'\n\n2. Provocation (Attack/Polemic): The text primarily challenges opposing viewpoints or reframes assumptions to destabilize them. This includes:\n\t- Insults directed at 'weakness', modern culture, or ideological opponents.\n\t- Deliberately controversial statements designed to trigger outrage or assert dominance.\n\t- Examples: 'The people pushing for vulnerability just want to emasculate you.', 'If you are a victim, you are useless.'\n\n3. Rhetorical Evidence (Anecdote/Metaphor): The text primarily uses personal stories, clinical examples, biological claims, or metaphors to justify a previously established belief. This includes:\n\t- Evolutionary psychology claims or references to animal behavior.\n\t- Clinical anecdotes or personal success stories.\n\t- Examples: 'Look at lobsters; their nervous systems are wired for hierarchy.', 'In my practice, I saw hundreds of young men who were completely lost.'\n\nSECONDARY FUNCTION: Assign a secondary code (1, 2, or 3) if the chunk clearly serves a second rhetorical function beyond its primary one. Assign 0 if the chunk serves only one function.\n\nQUOTABILITY:\nQ = Contains a memorable, self-contained phrase effective as a direct quote in a debate context.\nNQ = No standout quotable phrase."
+  }
+}
